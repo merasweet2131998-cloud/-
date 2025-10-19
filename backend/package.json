@@ -1,13 +1,10 @@
-  "start": "ts-node src/index.ts", 
-  "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
-  "seed": "ts-node-dev --transpile-only src/seed.ts",
-  "prisma:generate": "prisma generate",
-  "prisma:migrate": "prisma migrate dev"
+{
   "name": "smart-basket-backend",
   "version": "1.0.0",
   "private": true,
   "type": "module",
   "scripts": {
+    "start": "ts-node src/index.ts",
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
     "seed": "ts-node-dev --transpile-only src/seed.ts",
     "prisma:generate": "prisma generate",
