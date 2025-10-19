@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "start": "ts-node src/index.ts",
+    "start": "ts-node-esm src/index.ts",
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
     "seed": "ts-node-dev --transpile-only src/seed.ts",
     "prisma:generate": "prisma generate",
@@ -20,6 +20,7 @@
   },
   "devDependencies": {
     "prisma": "^5.17.0",
+    "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.4.0"
   }
