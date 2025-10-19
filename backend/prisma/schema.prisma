@@ -1,0 +1,107 @@
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  phone     String   @unique
+  name      String?
+  city      String?  // default city; orders must be in ALLOWED_CITY
+  createdAt DateTime @default(now())
+  profile   UserProfile?
+  carts     Cart[]
+  orders    Order[]
+  addresses Address[]
+}
+
+model UserProfile {
+  userId        String  @id
+  user          User    @relation(fields: [userId], references: [id])
+  familySize    Int     @default(2)
+  monthlyBudget Int     @default(600)
+  prefsJson     Json?
+}
+
+model Category {
+  id    String   @id @default(cuid())
+  name  String   @unique
+  products Product[]
+}
+
+model Product {
+  id              String   @id @default(cuid())
+  categoryId      String
+  category        Category @relation(fields: [categoryId], references: [id])
+  name            String
+  sku             String?  @unique
+  imageUrl        String?
+  price           Decimal
+  compareAtPrice  Decimal?
+  isActive        Boolean  @default(true)
+  inventory       Inventory?
+}
+
+model Inventory {
+  productId   String  @id
+  product     Product @relation(fields: [productId], references: [id])
+  qtyAvailable Int    @default(100)
+}
+
+model Cart {
+  id        String      @id @default(cuid())
+  userId    String
+  user      User        @relation(fields: [userId], references: [id])
+  total     Decimal     @default(0)
+  savings   Decimal     @default(0)
+  items     CartItem[]
+  updatedAt DateTime    @updatedAt
+}
+
+model CartItem {
+  id        String  @id @default(cuid())
+  cartId    String
+  cart      Cart    @relation(fields: [cartId], references: [id])
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+  qty       Int     @default(1)
+  unitPrice Decimal
+}
+
+model Address {
+  id        String  @id @default(cuid())
+  userId    String
+  user      User    @relation(fields: [userId], references: [id])
+  city      String
+  district  String?
+  street    String?
+  notes     String?
+}
+
+model Order {
+  id           String       @id @default(cuid())
+  userId       String
+  user         User         @relation(fields: [userId], references: [id])
+  addressId    String
+  address      Address      @relation(fields: [addressId], references: [id])
+  status       String       @default("pending")
+  total        Decimal      @default(0)
+  savings      Decimal      @default(0)
+  createdAt    DateTime     @default(now())
+  items        OrderItem[]
+}
+
+model OrderItem {
+  id        String  @id @default(cuid())
+  orderId   String
+  order     Order   @relation(fields: [orderId], references: [id])
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+  qty       Int     @default(1)
+  unitPrice Decimal
+}
